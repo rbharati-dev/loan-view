@@ -1,0 +1,38 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Quote {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+
+  // Business profile (used for comparables)
+  industry        String
+  annualRevenue   Float
+  yearsInBusiness Float
+
+  // Quote terms (minimal MVP: score by factor rate)
+  amount          Float?
+  termMonths      Int?
+  factorRate      Float
+
+  // Optional fields for future scoring / filtering
+  monthlyRevenue  Float?
+  creditScore     Int?
+  notes           String?
+
+  @@index([industry])
+  @@index([annualRevenue])
+  @@index([yearsInBusiness])
+  @@index([factorRate])
+}
