@@ -59,9 +59,13 @@ export default function AssessPage() {
       | { error?: string }
       | undefined;
     if (!res.ok) {
+      const msg =
+        json && "error" in json && typeof json.error === "string" && json.error
+          ? json.error
+          : "Assessment failed.";
       setStatus({
         type: "error",
-        message: (json && "error" in json && json.error) ?? "Assessment failed.",
+        message: msg,
       });
       return;
     }
@@ -69,31 +73,46 @@ export default function AssessPage() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-3xl p-6">
+    <div className="min-h-screen bg-[radial-gradient(60%_50%_at_50%_0%,rgba(34,211,238,0.18),rgba(0,0,0,0))]">
+      <div className="mx-auto w-full max-w-3xl p-6">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <p className="text-sm font-medium text-zinc-500">LoanView</p>
-          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-zinc-900">
+          <p className="text-xs font-medium tracking-wide text-zinc-500">
+            LOANVIEW
+          </p>
+          <h1 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-50">
             Score a factoring quote
           </h1>
         </div>
         <div className="flex items-center gap-4">
-          <Link href="/import" className="text-sm font-medium text-zinc-700 hover:underline">
-            Import
+          <Link
+            href="/quotes/new"
+            className="text-sm font-medium text-zinc-300 hover:text-zinc-100"
+          >
+            Add quote
           </Link>
-          <Link href="/" className="text-sm font-medium text-zinc-700 hover:underline">
+          <Link
+            href="/quotes"
+            className="text-sm font-medium text-zinc-300 hover:text-zinc-100"
+          >
+            Table
+          </Link>
+          <Link
+            href="/"
+            className="text-sm font-medium text-zinc-300 hover:text-zinc-100"
+          >
             Home
           </Link>
         </div>
       </div>
 
-      <div className="mt-6 grid gap-4 rounded-2xl border border-zinc-200 bg-white p-5 sm:grid-cols-2">
+      <div className="mt-6 grid gap-4 rounded-3xl border border-white/10 bg-black/40 p-6 backdrop-blur sm:grid-cols-2">
         <div className="sm:col-span-2">
-          <label className="block text-sm font-medium text-zinc-900">
+          <label className="block text-xs font-medium text-zinc-300">
             Industry
           </label>
           <input
-            className="mt-2 w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-zinc-200"
+            className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:ring-2 focus:ring-cyan-400/30 focus:border-cyan-400/30"
             value={industry}
             onChange={(e) => setIndustry(e.target.value)}
             placeholder="e.g. saas, trucking, healthcare"
@@ -101,11 +120,11 @@ export default function AssessPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-zinc-900">
+          <label className="block text-xs font-medium text-zinc-300">
             Annual revenue (ARR)
           </label>
           <input
-            className="mt-2 w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-zinc-200"
+            className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:ring-2 focus:ring-cyan-400/30 focus:border-cyan-400/30"
             value={annualRevenue}
             onChange={(e) => setAnnualRevenue(e.target.value)}
             inputMode="decimal"
@@ -114,11 +133,11 @@ export default function AssessPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-zinc-900">
+          <label className="block text-xs font-medium text-zinc-300">
             Years in business
           </label>
           <input
-            className="mt-2 w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-zinc-200"
+            className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:ring-2 focus:ring-cyan-400/30 focus:border-cyan-400/30"
             value={yearsInBusiness}
             onChange={(e) => setYearsInBusiness(e.target.value)}
             inputMode="decimal"
@@ -127,11 +146,11 @@ export default function AssessPage() {
         </div>
 
         <div className="sm:col-span-2">
-          <label className="block text-sm font-medium text-zinc-900">
+          <label className="block text-xs font-medium text-zinc-300">
             Lender factor rate (e.g. 1.22)
           </label>
           <input
-            className="mt-2 w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-zinc-200"
+            className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:ring-2 focus:ring-cyan-400/30 focus:border-cyan-400/30"
             value={factorRate}
             onChange={(e) => setFactorRate(e.target.value)}
             inputMode="decimal"
@@ -141,57 +160,66 @@ export default function AssessPage() {
 
         <div className="sm:col-span-2 flex flex-wrap items-center gap-3">
           <button
-            className="rounded-full bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 disabled:opacity-50"
+            className="rounded-full bg-cyan-400 px-5 py-2 text-sm font-semibold text-black hover:bg-cyan-300 disabled:opacity-50"
             onClick={submit}
             disabled={status.type === "loading"}
           >
             {status.type === "loading" ? "Scoring…" : "Score quote"}
           </button>
           <p className="text-xs text-zinc-500">
-            Tip: import at least ~30 quotes per industry for stable benchmarks.
+            Tip: the more stored quotes, the tighter your benchmark becomes.
           </p>
         </div>
       </div>
 
       {status.type === "error" && (
-        <div className="mt-4 rounded-2xl border border-red-200 bg-red-50 p-5 text-sm text-red-800">
+        <div className="mt-4 rounded-3xl border border-red-500/20 bg-red-500/10 p-5 text-sm text-red-200">
           {status.message}
         </div>
       )}
 
       {status.type === "done" && (
-        <div className="mt-4 rounded-2xl border border-zinc-200 bg-white p-5">
+        <div className="mt-4 rounded-3xl border border-white/10 bg-black/40 p-6 backdrop-blur">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="text-sm font-medium text-zinc-900">Result</p>
+            <p className="text-sm font-medium text-zinc-200">Result</p>
             {pill ? (
-              <span className={`rounded-full border px-3 py-1 text-xs font-medium ${pill.cls}`}>
+              <span
+                className={[
+                  "rounded-full border px-3 py-1 text-xs font-medium",
+                  status.data.benchmark.label === "good"
+                    ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-200"
+                    : status.data.benchmark.label === "bad"
+                      ? "border-red-400/20 bg-red-400/10 text-red-200"
+                      : "border-amber-400/20 bg-amber-400/10 text-amber-200",
+                ].join(" ")}
+              >
                 {pill.text}
               </span>
             ) : null}
           </div>
 
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
-            <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
               <p className="text-xs font-medium text-zinc-500">P25</p>
-              <p className="mt-1 font-mono text-lg text-zinc-900">
+              <p className="mt-1 font-mono text-lg text-zinc-50">
                 {fmt(status.data.benchmark.p25)}
               </p>
             </div>
-            <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
               <p className="text-xs font-medium text-zinc-500">Median (P50)</p>
-              <p className="mt-1 font-mono text-lg text-zinc-900">
+              <p className="mt-1 font-mono text-lg text-zinc-50">
                 {fmt(status.data.benchmark.p50)}
               </p>
             </div>
-            <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
               <p className="text-xs font-medium text-zinc-500">P75</p>
-              <p className="mt-1 font-mono text-lg text-zinc-900">
+              <p className="mt-1 font-mono text-lg text-zinc-50">
                 {fmt(status.data.benchmark.p75)}
               </p>
             </div>
           </div>
 
-          <div className="mt-4 rounded-xl border border-zinc-200 bg-zinc-50 p-4 text-sm text-zinc-700">
+          <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-zinc-200">
             <p>
               Your factor rate is at about{" "}
               <span className="font-mono">
@@ -208,6 +236,7 @@ export default function AssessPage() {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }

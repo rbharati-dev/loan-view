@@ -15,7 +15,8 @@ Then open `http://localhost:3000`.
 
 ## Use
 
-- **Import data**: go to `/import` and upload a CSV (template at `/quotes-template.csv`).
+- **Add historical quotes**: go to `/quotes/new` and submit the underwriting + terms form (stored in SQLite).
+- **Browse stored records**: go to `/quotes`.
 - **Score a quote**: go to `/assess`, enter business details + the lender’s factor rate.
 
 ## Scoring (current MVP)

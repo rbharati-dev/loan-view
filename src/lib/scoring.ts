@@ -58,16 +58,31 @@ export type Comparable = {
   factorRate: number;
   annualRevenue: number;
   yearsInBusiness: number;
+  creditScore?: number | null;
+  monthlyRevenue?: number | null;
+  grossMarginPct?: number | null;
+  arDays?: number | null;
+  topCustomerPct?: number | null;
 };
 
 export function pickNearestComparables(params: {
   quotes: Comparable[];
   annualRevenue: number;
   yearsInBusiness: number;
+  creditScore?: number | null;
+  monthlyRevenue?: number | null;
+  grossMarginPct?: number | null;
+  arDays?: number | null;
+  topCustomerPct?: number | null;
   k: number;
 }): Comparable[] {
   const targetLogRev = Math.log1p(Math.max(0, params.annualRevenue));
   const targetYears = Math.max(0, params.yearsInBusiness);
+  const targetCredit = params.creditScore ?? null;
+  const targetMonthlyRev = params.monthlyRevenue ?? null;
+  const targetGrossMargin = params.grossMarginPct ?? null;
+  const targetArDays = params.arDays ?? null;
+  const targetTopCust = params.topCustomerPct ?? null;
 
   const scored = params.quotes
     .filter(
@@ -81,7 +96,34 @@ export function pickNearestComparables(params: {
       const years = Math.max(0, q.yearsInBusiness);
       const dRev = logRev - targetLogRev;
       const dYears = (years - targetYears) / 10; // years scale
-      const dist = Math.hypot(dRev, dYears);
+
+      // Optional features: only contribute if both sides are present.
+      let dist2 = dRev * dRev + dYears * dYears;
+
+      if (targetCredit !== null && q.creditScore != null) {
+        const d = (q.creditScore - targetCredit) / 100;
+        dist2 += d * d;
+      }
+      if (targetMonthlyRev !== null && q.monthlyRevenue != null) {
+        const d =
+          Math.log1p(Math.max(0, q.monthlyRevenue)) -
+          Math.log1p(Math.max(0, targetMonthlyRev));
+        dist2 += d * d;
+      }
+      if (targetGrossMargin !== null && q.grossMarginPct != null) {
+        const d = (q.grossMarginPct - targetGrossMargin) / 20;
+        dist2 += d * d;
+      }
+      if (targetArDays !== null && q.arDays != null) {
+        const d = (q.arDays - targetArDays) / 30;
+        dist2 += d * d;
+      }
+      if (targetTopCust !== null && q.topCustomerPct != null) {
+        const d = (q.topCustomerPct - targetTopCust) / 30;
+        dist2 += d * d;
+      }
+
+      const dist = Math.sqrt(dist2);
       return { q, dist };
     })
     .sort((a, b) => a.dist - b.dist);

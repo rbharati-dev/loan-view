@@ -28,7 +28,16 @@ export async function POST(req: Request) {
 
   const sameIndustry = await prisma.quote.findMany({
     where: { industry },
-    select: { factorRate: true, annualRevenue: true, yearsInBusiness: true },
+    select: {
+      factorRate: true,
+      annualRevenue: true,
+      yearsInBusiness: true,
+      creditScore: true,
+      monthlyRevenue: true,
+      grossMarginPct: true,
+      arDays: true,
+      topCustomerPct: true,
+    },
     take: 1500,
   });
 
@@ -36,7 +45,16 @@ export async function POST(req: Request) {
     sameIndustry.length >= 30
       ? sameIndustry
       : await prisma.quote.findMany({
-          select: { factorRate: true, annualRevenue: true, yearsInBusiness: true },
+          select: {
+            factorRate: true,
+            annualRevenue: true,
+            yearsInBusiness: true,
+            creditScore: true,
+            monthlyRevenue: true,
+            grossMarginPct: true,
+            arDays: true,
+            topCustomerPct: true,
+          },
           take: 3000,
         });
 

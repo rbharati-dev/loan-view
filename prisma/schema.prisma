@@ -18,17 +18,65 @@ model Quote {
 
   // Business profile (used for comparables)
   industry        String
+  subIndustry     String?
+  businessModel   String? // b2b, b2c, mixed
+  entityType      String? // llc, s-corp, c-corp, sole-prop, other
+  state           String?
+
   annualRevenue   Float
+  monthlyRevenue  Float?
+  avgBankBalance  Float?
+  avgMonthlyDeposits Float?
+  grossMarginPct  Float?
+  arDays          Float? // average AR days
+
   yearsInBusiness Float
+  monthsInBusiness Int?
+  timeInBusinessSameOwnerYears Float?
+
+  // Owner / credit profile
+  creditScore     Int? // FICO / similar
+  personalGuarantee Boolean @default(false)
+  bankruptciesLast7y Boolean @default(false)
+  taxLiens Boolean @default(false)
+  judgments Boolean @default(false)
+  nsfLast90Days Int?
+
+  // Leverage / existing obligations
+  existingDebtMonthlyPayments Float?
+  existingAdvancesOutstanding Float?
+  dscr Float?
+
+  // Concentration / customer quality (common in factoring)
+  topCustomerPct Float?
+  top3CustomersPct Float?
+  customerCount Int?
+  customerCreditQuality String? // strong, mixed, weak
+  invoiceVolumeMonthly Float?
+  averageInvoiceSize Float?
 
   // Quote terms (minimal MVP: score by factor rate)
   amount          Float?
   termMonths      Int?
   factorRate      Float
 
-  // Optional fields for future scoring / filtering
-  monthlyRevenue  Float?
-  creditScore     Int?
+  advanceRatePct  Float? // e.g. 85
+  discountRatePct Float? // if provided separately
+  feeFlat         Float?
+  feePct          Float?
+  minFee          Float?
+  originationFee  Float?
+  dueDiligenceFee Float?
+  wireFee         Float?
+  lockboxFee      Float?
+  terminationFee  Float?
+  recourse        Boolean?
+  reservePct      Float?
+
+  // Metadata
+  lenderName      String?
+  productType     String? // factoring, mca, loc, revenue-based, etc
+  source          String? // manual, broker, etc
   notes           String?
 
   @@index([industry])

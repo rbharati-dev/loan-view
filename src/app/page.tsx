@@ -2,56 +2,70 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex flex-1 items-center justify-center bg-zinc-50 font-sans">
-      <main className="w-full max-w-3xl rounded-2xl border border-zinc-200 bg-white p-10 shadow-sm">
-        <div className="flex items-start justify-between gap-6">
-          <div>
-            <p className="text-sm font-medium text-zinc-500">LoanView</p>
-            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-zinc-900">
-              Factoring quote benchmark
-            </h1>
-            <p className="mt-3 text-zinc-600">
-              Import historical quotes, then score a new lender quote as{" "}
-              <span className="font-medium text-zinc-900">good</span>,{" "}
-              <span className="font-medium text-zinc-900">ok</span>, or{" "}
-              <span className="font-medium text-zinc-900">bad</span> relative to
-              comparable businesses.
-            </p>
-          </div>
-          <div className="hidden rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-700 sm:block">
-            <p className="font-medium text-zinc-900">Data status</p>
-            <p className="mt-1">
-              Import a CSV to populate your benchmark dataset.
-            </p>
-          </div>
-        </div>
-
-        <div className="mt-8 grid gap-4 sm:grid-cols-2">
-          <Link
-            href="/import"
-            className="rounded-2xl border border-zinc-200 p-5 transition hover:bg-zinc-50"
-          >
-            <p className="text-sm font-medium text-zinc-900">1) Import quotes</p>
-            <p className="mt-1 text-sm text-zinc-600">
-              Upload a CSV of past factoring quotes to build your benchmark.
-            </p>
-          </Link>
-          <Link
-            href="/assess"
-            className="rounded-2xl border border-zinc-200 p-5 transition hover:bg-zinc-50"
-          >
-            <p className="text-sm font-medium text-zinc-900">2) Score a quote</p>
-            <p className="mt-1 text-sm text-zinc-600">
-              Enter business details + factor rate to see where it lands.
-            </p>
-          </Link>
-        </div>
-
-        <div className="mt-8 rounded-2xl border border-zinc-200 bg-zinc-50 p-5 text-sm text-zinc-700">
-          <p className="font-medium text-zinc-900">CSV columns (minimum)</p>
-          <p className="mt-1 font-mono text-xs">
-            industry, annualRevenue, yearsInBusiness, factorRate
+    <div className="flex flex-1 items-center justify-center bg-[radial-gradient(60%_50%_at_50%_0%,rgba(34,211,238,0.18),rgba(0,0,0,0))] px-6 py-16">
+      <main className="w-full max-w-5xl overflow-hidden rounded-3xl border border-white/10 bg-black/40 shadow-[0_0_0_1px_rgba(255,255,255,0.04),0_30px_80px_rgba(0,0,0,0.55)] backdrop-blur">
+        <div className="p-10">
+          <p className="text-xs font-medium tracking-[0.2em] text-zinc-500">
+            LOANVIEW
           </p>
+          <h1 className="mt-3 text-4xl font-semibold tracking-tight text-zinc-50">
+            Benchmark alternative financing quotes
+          </h1>
+          <p className="mt-4 max-w-2xl text-sm leading-6 text-zinc-400">
+            A minimalist analytics cockpit for SMEs: store historical lender
+            quotes, then score a new quote against comparable businesses.
+          </p>
+
+          <div className="mt-8 grid gap-4 sm:grid-cols-3">
+            <Link
+              href="/quotes/new"
+              className="group rounded-3xl border border-white/10 bg-white/5 p-6 transition hover:bg-white/10"
+            >
+              <p className="text-sm font-medium text-zinc-100">Add quote</p>
+              <p className="mt-2 text-sm text-zinc-400">
+                Capture underwriting factors + terms.
+              </p>
+              <p className="mt-4 text-xs font-medium text-cyan-300">
+                Write to database →
+              </p>
+            </Link>
+            <Link
+              href="/assess"
+              className="group rounded-3xl border border-white/10 bg-white/5 p-6 transition hover:bg-white/10"
+            >
+              <p className="text-sm font-medium text-zinc-100">Score quote</p>
+              <p className="mt-2 text-sm text-zinc-400">
+                Good / ok / bad relative to comparables.
+              </p>
+              <p className="mt-4 text-xs font-medium text-cyan-300">
+                Get benchmark →
+              </p>
+            </Link>
+            <Link
+              href="/quotes"
+              className="group rounded-3xl border border-white/10 bg-white/5 p-6 transition hover:bg-white/10"
+            >
+              <p className="text-sm font-medium text-zinc-100">Quotes table</p>
+              <p className="mt-2 text-sm text-zinc-400">
+                Browse stored records.
+              </p>
+              <p className="mt-4 text-xs font-medium text-cyan-300">
+                View data →
+              </p>
+            </Link>
+          </div>
+
+          <div className="mt-10 flex flex-wrap items-center gap-3 text-xs text-zinc-500">
+            <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
+              SQLite + Prisma
+            </span>
+            <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
+              kNN benchmark scoring
+            </span>
+            <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
+              underwriting-factor form
+            </span>
+          </div>
         </div>
       </main>
     </div>
